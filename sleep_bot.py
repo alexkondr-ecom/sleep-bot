@@ -9,7 +9,6 @@ import os
 TOKEN = os.getenv("TOKEN")
 
 # Функція розрахунку
-
 def calculate_wake_times(sleep_time: str):
     try:
         sleep_dt = datetime.strptime(sleep_time, "%H:%M") + timedelta(minutes=15)
@@ -24,7 +23,6 @@ def calculate_wake_times(sleep_time: str):
     return "🌞 Ідеальні часи для пробудження:\n" + "\n".join(wake_times)
 
 # Команда /start
-
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
         [
@@ -36,10 +34,9 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text(Обери дію нижче:, reply_markup=reply_markup)
+    await update.message.reply_text("Обери дію нижче:", reply_markup=reply_markup)
 
 # Обробник кнопок
-
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -50,8 +47,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text(result)
 
     elif query.data == 'custom':
-        await query.edit_message_text(Укажи час у форматі HH:MM (наприклад: 23:45),
-                                      )
+        await query.edit_message_text("Укажи час у форматі HH:MM (наприклад: 23:45)")
 
     elif query.data == 'help':
         help_text = (
@@ -62,24 +58,21 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text(help_text)
 
 # Команда /help
-
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "👋 Привіт! Напиши /start, щоб обрати дію або введи \n/sleep 23:45 — якщо знаєш час засинання\n/now — якщо засинаєш зараз"
     )
 
 # /now команда
-
 async def now_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     now_time = datetime.now().strftime("%H:%M")
     result = calculate_wake_times(now_time)
     await update.message.reply_text(result)
 
 # /sleep 23:30
-
 async def sleep_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not context.args:
-        await update.message.reply_text(Введи час, наприклад: /sleep 23:45)
+        await update.message.reply_text("Введи час, наприклад: /sleep 23:45")
         return
     result = calculate_wake_times(context.args[0])
     await update.message.reply_text(result)
